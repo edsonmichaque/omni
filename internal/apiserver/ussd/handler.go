@@ -1,4 +1,4 @@
-package session
+package ussd
 
 import "net/http"
 
