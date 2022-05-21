@@ -1,6 +1,7 @@
 package server
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 
@@ -25,22 +26,24 @@ func (s Server) router() *mux.Router {
 }
 
 func (s Server) start(c *config.Config) error {
-	var cache internal.Cache
-
-	if c.Cache.Redis != (config.Redis{}) {
-		cache = redis.Redis{}
+	cache, err := newCache(c.Cache)
+	if err != nil {
+		return err
 	}
 
-	if c.Cache.Memcached != (config.Memcached{}) {
-		cache = memcached.Memcached{}
+	logger, err := newLogger(c.Logger)
+	if err != nil {
+		return err
 	}
 
 	s.smsHandler = sms.Handler{
-		Cache: cache,
+		Cache:  cache,
+		Logger: logger,
 	}
 
 	s.ussdHandler = ussd.Handler{
-		Cache: cache,
+		Cache:  cache,
+		Logger: logger,
 	}
 
 	srv := http.Server{
@@ -53,4 +56,20 @@ func (s Server) start(c *config.Config) error {
 	}
 
 	return nil
+}
+
+func newCache(c config.Cache) (internal.Cache, error) {
+	if c.Redis != (config.Redis{}) {
+		return redis.Redis{}, nil
+	}
+
+	if c.Memcached != (config.Memcached{}) {
+		return memcached.Memcached{}, nil
+	}
+
+	return nil, errors.New("invalid cache")
+}
+
+func newLogger(c config.Logger) (internal.Logger, error) {
+	return nil, errors.New("invalid logger")
 }

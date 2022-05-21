@@ -7,7 +7,8 @@ import (
 )
 
 type Handler struct {
-	Cache internal.Cache
+	Cache  internal.Cache
+	Logger internal.Logger
 }
 
 func (h Handler) SendMessages(rw http.ResponseWriter, r *http.Request) {}
