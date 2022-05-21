@@ -7,6 +7,7 @@ import (
 	"github.com/edsonmichaque/omni/internal"
 	"github.com/edsonmichaque/omni/internal/cache/memcached"
 	"github.com/edsonmichaque/omni/internal/cache/redis"
+	"github.com/edsonmichaque/omni/internal/config"
 	"github.com/edsonmichaque/omni/internal/sms"
 	"github.com/edsonmichaque/omni/internal/ussd"
 	"github.com/gorilla/mux"
@@ -23,14 +24,14 @@ func (s Server) router() *mux.Router {
 	return r
 }
 
-func (s Server) start(c *internal.Config) error {
+func (s Server) start(c *config.Config) error {
 	var cache internal.Cache
 
-	if c.Cache.Redis != (internal.RedisConfig{}) {
+	if c.Cache.Redis != (config.Redis{}) {
 		cache = redis.Redis{}
 	}
 
-	if c.Cache.Memcached != (internal.MemcachedConfig{}) {
+	if c.Cache.Memcached != (config.Memcached{}) {
 		cache = memcached.Memcached{}
 	}
 
