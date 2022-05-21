@@ -1,4 +1,4 @@
-package apiserver
+package sms
 
 import "net/http"
 
