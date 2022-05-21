@@ -1,8 +1,14 @@
 package sms
 
-import "net/http"
+import (
+	"net/http"
 
-type Handler struct{}
+	"github.com/edsonmichaque/omni/internal"
+)
+
+type Handler struct {
+	Cache internal.Cache
+}
 
 func (h Handler) SendMessages(rw http.ResponseWriter, r *http.Request) {}
 
