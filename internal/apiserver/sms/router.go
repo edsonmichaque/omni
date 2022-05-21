@@ -6,12 +6,10 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func (h Handler) Router(parent *mux.Router) *mux.Router {
-	r := parent.NewRoute().Subrouter()
-
-	r.HandleFunc("sms/", h.SendMessages).Methods(http.MethodPost)
-	r.HandleFunc("sms/", h.ListMessages).Methods(http.MethodGet)
-	r.HandleFunc("sms/:id", h.GetMessage).Methods(http.MethodGet)
+func (h Handler) Router(r *mux.Router) *mux.Router {
+	r.HandleFunc("/sms", h.SendMessages).Methods(http.MethodPost)
+	r.HandleFunc("/sms", h.ListMessages).Methods(http.MethodGet)
+	r.HandleFunc("/sms/:id", h.GetMessage).Methods(http.MethodGet)
 
 	return r
 }
