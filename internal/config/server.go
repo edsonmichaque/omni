@@ -1,6 +1,10 @@
 package config
 
-type Config struct {
+type Omnictl struct {
+	BaseURL string `koanf:"base_url"`
+}
+
+type Omnid struct {
 	Server *struct {
 		Address string `koanf:"address"`
 		Port    int    `koanf:"port"`
