@@ -1,9 +1,5 @@
 package config
 
-type Omnictl struct {
-	BaseURL string `koanf:"base_url"`
-}
-
 type Omnid struct {
 	Server *struct {
 		Address string `koanf:"address"`
