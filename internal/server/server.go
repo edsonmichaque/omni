@@ -9,14 +9,14 @@ import (
 	"github.com/edsonmichaque/omni/internal/cache/memcached"
 	"github.com/edsonmichaque/omni/internal/cache/redis"
 	"github.com/edsonmichaque/omni/internal/config"
-	"github.com/edsonmichaque/omni/internal/sms"
-	"github.com/edsonmichaque/omni/internal/ussd"
+	"github.com/edsonmichaque/omni/internal/server/message"
+	"github.com/edsonmichaque/omni/internal/server/session"
 	"github.com/gorilla/mux"
 )
 
 type Server struct {
-	smsHandler  sms.Handler
-	ussdHandler ussd.Handler
+	smsHandler  message.Handler
+	ussdHandler session.Handler
 }
 
 func (s Server) router() *mux.Router {
@@ -26,22 +26,22 @@ func (s Server) router() *mux.Router {
 }
 
 func (s Server) start(c *config.Config) error {
-	cache, err := newCache(c.Cache)
+	cache, err := newCacheProvider(c.Cache)
 	if err != nil {
 		return err
 	}
 
-	logger, err := newLogger(c.Logger)
+	logger, err := newLogProvider(c.Log)
 	if err != nil {
 		return err
 	}
 
-	s.smsHandler = sms.Handler{
+	s.smsHandler = message.Handler{
 		Cache:  cache,
 		Logger: logger,
 	}
 
-	s.ussdHandler = ussd.Handler{
+	s.ussdHandler = session.Handler{
 		Cache:  cache,
 		Logger: logger,
 	}
@@ -58,7 +58,7 @@ func (s Server) start(c *config.Config) error {
 	return nil
 }
 
-func newCache(c config.Cache) (internal.Cache, error) {
+func newCacheProvider(c config.CacheProvider) (internal.Cache, error) {
 	if c.Redis != (config.Redis{}) {
 		return redis.Redis{}, nil
 	}
@@ -70,6 +70,6 @@ func newCache(c config.Cache) (internal.Cache, error) {
 	return nil, errors.New("invalid cache")
 }
 
-func newLogger(c config.Logger) (internal.Logger, error) {
+func newLogProvider(c config.LogProvider) (internal.Logger, error) {
 	return nil, errors.New("invalid logger")
 }

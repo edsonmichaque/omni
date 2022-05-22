@@ -1,4 +1,4 @@
-package sms
+package message
 
 type NewSMS struct {
 	Messages []Message `json:"messages,omitempty"`
