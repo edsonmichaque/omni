@@ -25,13 +25,13 @@ func (s Server) router() *mux.Router {
 	return r
 }
 
-func (s Server) start(c *config.Config) error {
-	cache, err := newCacheProvider(c.Cache)
+func (s Server) start(c config.Server) error {
+	cache, err := newCacheProvider(c)
 	if err != nil {
 		return err
 	}
 
-	logger, err := newLogProvider(c.Log)
+	logger, err := newLogProvider(c)
 	if err != nil {
 		return err
 	}
@@ -47,7 +47,7 @@ func (s Server) start(c *config.Config) error {
 	}
 
 	srv := http.Server{
-		Addr:    fmt.Sprintf("%s:%d", c.Address, c.Port),
+		Addr:    fmt.Sprintf("%s:%d", c.Server.Address, c.Server.Port),
 		Handler: s.router(),
 	}
 
@@ -58,18 +58,18 @@ func (s Server) start(c *config.Config) error {
 	return nil
 }
 
-func newCacheProvider(c config.CacheProvider) (internal.Cache, error) {
-	if c.Redis != (config.Redis{}) {
+func newCacheProvider(c config.Server) (internal.Cache, error) {
+	if c.Cache.Redis != nil {
 		return redis.Redis{}, nil
 	}
 
-	if c.Memcached != (config.Memcached{}) {
+	if c.Cache.Memcached != nil {
 		return memcached.Memcached{}, nil
 	}
 
 	return nil, errors.New("invalid cache")
 }
 
-func newLogProvider(c config.LogProvider) (internal.Logger, error) {
+func newLogProvider(c config.Server) (internal.Log, error) {
 	return nil, errors.New("invalid logger")
 }

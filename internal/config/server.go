@@ -1,16 +1,20 @@
 package config
 
-type Omnid struct {
-	Server *struct {
-		Address string `koanf:"address"`
-		Port    int    `koanf:"port"`
-		TLS     *struct {
-			CertificatePath string `koanf:"certificate_path"`
-			PrivateKeyPath  string `koanf:"private_key_path"`
-		} `koanf:"tls"`
-	} `koanf:"server"`
+type ServerTLS struct {
+	CertificatePath string `koanf:"certificate_path"`
+	PrivateKeyPath  string `koanf:"private_key_path"`
+}
 
-	Cache struct {
+type ServerConfig struct {
+	Address string    `koanf:"address"`
+	Port    int       `koanf:"port"`
+	TLS     ServerTLS `koanf:"tls"`
+}
+
+type Server struct {
+	Server ServerConfig `koanf:"server"`
+
+	Cache *struct {
 		Redis *struct {
 			Address string `koanf:"address"`
 			Port    int    `koanf:"port"`
@@ -22,30 +26,30 @@ type Omnid struct {
 		} `koanf:"memcached"`
 	} `koanf:"cache"`
 
-	Log struct {
+	Log *struct {
 		Zap    interface{} `koanf:"zap"`
 		Logrus interface{} `koanf:"logrus"`
 	} `koanf:"log"`
 
-	Secrets struct {
-		Vault struct {
+	Secrets *struct {
+		Vault *struct {
 			Address string `koanf:"address"`
 			Token   string `koanf:"token"`
 		} `koanf:"vault"`
 
-		Database struct {
+		Database *struct {
 			EncryptionKey string `koanf:"encryption_key"`
 			Table         string `koanf:"table"`
 		} `koanf:"aws"`
 	} `koanf:"secrets"`
 
-	Database struct {
-		SQLite struct {
+	Database *struct {
+		SQLite *struct {
 			Path   string `koanf:"path"`
 			Memory bool   `koanf:"memory"`
 		} `koanf:"sqlite"`
 
-		Postgres struct {
+		Postgres *struct {
 			Host     string `koanf:"host"`
 			Port     string `koanf:"port"`
 			User     string `koanf:"user"`

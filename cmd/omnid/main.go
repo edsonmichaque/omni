@@ -1,7 +1,15 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+
+	"github.com/edsonmichaque/omni/internal/cmd/omnid"
+)
 
 func main() {
-	fmt.Println("hello world")
+	if err := omnid.New("omnid"); err != nil {
+		fmt.Fprintf(os.Stderr, err.Error())
+		os.Exit(1)
+	}
 }
