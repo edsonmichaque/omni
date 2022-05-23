@@ -3,32 +3,30 @@ package cmd
 import "github.com/spf13/cobra"
 
 type Command struct {
-	Handler  func() *cobra.Command
+	Handler  *cobra.Command
 	Children []*Command
-	cmd      *cobra.Command
 }
 
-func (c *Command) Apply() {
-	c.cmd = c.Handler()
-
+func (c *Command) apply() {
 	for _, child := range c.Children {
-		if child.cmd == nil {
-			child.Apply()
+		if child.Children != nil {
+			child.apply()
 		}
 
-		c.cmd.AddCommand(child.cmd)
+		c.Handler.AddCommand(child.Handler)
 	}
 }
 
 func (c *Command) Execute() error {
-	return c.cmd.Execute()
+	c.apply()
+	return c.Handler.Execute()
 }
 
 type CommandOption func(*Command)
 
 func WithHandler(f func() *cobra.Command) CommandOption {
 	return func(c *Command) {
-		c.Handler = f
+		c.Handler = f()
 	}
 }
 

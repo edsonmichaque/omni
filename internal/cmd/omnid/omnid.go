@@ -15,10 +15,14 @@ func New(name string) error {
 		cmd.WithChildren(
 			cmd.New(cmd.WithHandler(CmdMigrate)),
 			cmd.New(cmd.WithHandler(CmdRun)),
-			cmd.New(cmd.WithHandler(CmdRestore)),
+			cmd.New(
+				cmd.WithHandler(CmdRestore),
+				cmd.WithChildren(
+					cmd.New(cmd.WithHandler(CmdRun)),
+				),
+			),
 		),
 	)
 
-	cmd.Apply()
 	return cmd.Execute()
 }

@@ -17,6 +17,5 @@ func New(name string) error {
 		),
 	)
 
-	cmd.Apply()
 	return cmd.Execute()
 }
