@@ -3,15 +3,15 @@ package cmd
 import "github.com/spf13/cobra"
 
 type Command struct {
-	Handler     func() *cobra.Command
-	Subcommands []*Command
-	cmd         *cobra.Command
+	Handler  func() *cobra.Command
+	Children []*Command
+	cmd      *cobra.Command
 }
 
 func (c *Command) Apply() {
 	c.cmd = c.Handler()
 
-	for _, child := range c.Subcommands {
+	for _, child := range c.Children {
 		if child.cmd == nil {
 			child.Apply()
 		}
@@ -32,13 +32,13 @@ func WithHandler(f func() *cobra.Command) CommandOption {
 	}
 }
 
-func WithSubcommands(sub ...*Command) CommandOption {
+func WithChildren(sub ...*Command) CommandOption {
 	return func(c *Command) {
-		if c.Subcommands == nil {
-			c.Subcommands = make([]*Command, 0)
+		if c.Children == nil {
+			c.Children = make([]*Command, 0)
 		}
 
-		c.Subcommands = append(c.Subcommands, sub...)
+		c.Children = append(c.Children, sub...)
 	}
 
 }
