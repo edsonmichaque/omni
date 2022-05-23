@@ -7,15 +7,15 @@ import (
 
 func New(name string) error {
 	cmd := cmd.New(
-		cmd.Run(func() *cobra.Command {
+		cmd.WithHandler(func() *cobra.Command {
 			return &cobra.Command{
 				Use: name,
 			}
 		}),
 		cmd.WithSubcommands(
-			cmd.New(cmd.Run(CmdMigrate)),
-			cmd.New(cmd.Run(CmdRun)),
-			cmd.New(cmd.Run(CmdRestore)),
+			cmd.New(cmd.WithHandler(CmdMigrate)),
+			cmd.New(cmd.WithHandler(CmdRun)),
+			cmd.New(cmd.WithHandler(CmdRestore)),
 		),
 	)
 

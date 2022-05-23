@@ -10,6 +10,7 @@ func CmdRestore() *cobra.Command {
 	var params struct {
 		debug  bool
 		config string
+		dryRun bool
 	}
 
 	cmd := &cobra.Command{
@@ -23,6 +24,7 @@ func CmdRestore() *cobra.Command {
 	}
 
 	cmd.Flags().BoolVar(&params.debug, "debug", false, "")
+	cmd.Flags().BoolVar(&params.dryRun, "dry-run", false, "")
 	cmd.Flags().StringVar(&params.config, "config", "", "")
 
 	return cmd
