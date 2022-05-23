@@ -12,7 +12,7 @@ func New(name string) error {
 				Use: name,
 			}
 		}),
-		cmd.WithSubcommands(
+		cmd.WithChildren(
 			cmd.New(cmd.WithHandler(CmdMigrate)),
 			cmd.New(cmd.WithHandler(CmdRun)),
 			cmd.New(cmd.WithHandler(CmdRestore)),
